@@ -27,11 +27,18 @@ const crearCuadratin = (puntosActivos: number[]): BrailleMatrix => {
  * Contiene la representación en matriz de:
  * - Las tres series del abecedario (a–z).
  * - Vocales acentuadas (á, é, í, ó, ú, ü) y letras especiales del español (ñ, ch, ll).
+ * - **Dígitos del 0 al 9**, declarados explícitamente para evitar conversiones implícitas
+ *   con `charCodeAt` que causaban que el `'0'` se renderizara como celda vacía
+ *   (ASCII 48 + 48 = 96 = backtick `` ` ``, sin entrada en el diccionario).
  * - Signos de puntuación y operadores matemáticos básicos.
  * - Prefijos de control para números y mayúsculas.
  *
  * Es una estructura de datos inmutable consumida por {@link BrailleTranslatorService}
  * para resolver la equivalencia de cada carácter durante la traducción.
+ *
+ * @remarks
+ * En el sistema Braille, los dígitos comparten celda con las letras de la Serie 1
+ * antecedidos por el `PREFIJO_NUMERO`: `1`=`a`, `2`=`b`, …, `9`=`i`, `0`=`j`.
  */
 export const BrailleDictionary: Record<string, BrailleMatrix> = {
   // --- Serie 1 (a-j): puntos 1-2-4-5 ---
@@ -99,6 +106,21 @@ export const BrailleDictionary: Record<string, BrailleMatrix> = {
 
   // --- Espacio ---
   ' ': crearCuadratin([]),
+
+  // --- Dígitos (reutilizan las celdas de la Serie 1: 1=a … 9=i, 0=j) ---
+  // Se declaran aquí explícitamente para evitar depender de conversiones
+  // charCodeAt en tiempo de ejecución, lo que hacía que el '0' fallara
+  // (charCode 48 + 48 = 96 = backtick, sin entrada en el diccionario).
+  '1': crearCuadratin([1]),
+  '2': crearCuadratin([1, 2]),
+  '3': crearCuadratin([1, 4]),
+  '4': crearCuadratin([1, 4, 5]),
+  '5': crearCuadratin([1, 5]),
+  '6': crearCuadratin([1, 2, 4]),
+  '7': crearCuadratin([1, 2, 4, 5]),
+  '8': crearCuadratin([1, 2, 5]),
+  '9': crearCuadratin([2, 4]),
+  '0': crearCuadratin([1, 4, 5, 6]), // En braille español el 0 es ⠹ (puntos 1,4,5,6)
 
   // --- Prefijos ---
   'PREFIJO_NUMERO':    crearCuadratin([3, 4, 5, 6]),
