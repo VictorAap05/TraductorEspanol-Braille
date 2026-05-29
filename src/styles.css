@@ -421,3 +421,48 @@ code {
   text-align: center;
   min-height: 20px;
 }
+
+
+
+.export-section {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.export-btn {
+  padding: 10px 22px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #30515f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.export-btn:hover:not(:disabled) {
+  background-color: #1e3a45;
+  transform: translateY(-1px);
+}
+
+.export-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.export-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .export-btn {
+    background-color: #4a8fa0;
+  }
+
+  .export-btn:hover:not(:disabled) {
+    background-color: #3a7a8a;
+  }
+}

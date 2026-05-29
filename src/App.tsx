@@ -1,10 +1,17 @@
 import { useBrailleTranslator } from './hooks/useBrailleTranslator';
+import { usePdfExport } from './hooks/usePdfExport';
 import { BrailleCell } from './components/BrailleCell/BrailleCell';
 import { ParticleBackground } from './components/ParticleBackground/ParticleBackground';
 import './styles.css';
 
+/**
+ * Componente raíz de la aplicación.
+ * Orquesta los hooks de la Capa de Adaptación y delega el renderizado
+ * a los componentes especializados.
+ */
 function App() {
   const { textoOriginal, setTextoOriginal, traduccion } = useBrailleTranslator();
+  const { exportarPdf, exportando } = usePdfExport();
 
   return (
     <>
@@ -46,6 +53,19 @@ function App() {
             />
           ))}
         </div>
+
+        {/* Botón de exportación — solo visible cuando hay contenido */}
+        {traduccion.length > 0 && (
+          <div className="export-section">
+            <button
+              className="export-btn"
+              onClick={() => exportarPdf(textoOriginal, traduccion)}
+              disabled={exportando}
+            >
+              {exportando ? 'Generando PDF...' : 'Exportar traducción a PDF'}
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
