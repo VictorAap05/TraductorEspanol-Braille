@@ -1,18 +1,44 @@
 import { useEffect, useRef } from 'react';
 
+/**
+ * Representa el estado y las propiedades físicas de una partícula individual
+ * en la animación de fondo.
+ */
 interface Particle {
+  /** Posición actual en el eje X dentro del canvas. */
   x: number;
+  /** Posición actual en el eje Y dentro del canvas. */
   y: number;
+  /** Velocidad de movimiento en el eje X (píxeles por frame). */
   vx: number;
+  /** Velocidad de movimiento en el eje Y (píxeles por frame). */
   vy: number;
+  /** Radio (tamaño) de la partícula en píxeles. */
   radius: number;
+  /** Opacidad actual de la partícula (valor decimal entre 0 y 1). */
   opacity: number;
+  /** * Dirección del cambio de opacidad (efecto destello).
+   * `1` para incrementar (fade-in), `-1` para disminuir (fade-out).
+   */
   opacityDir: number;
 }
 
+/** * Número total de partículas que se renderizarán simultáneamente en el lienzo.
+ */
 const PARTICLE_COUNT = 60;
+
+/** * Paleta de colores en formato Hexadecimal utilizada para pintar las partículas de forma aleatoria.
+ */
 const COLORS = ['#125565', '#30515f', '#9ac9d0', '#6aadb8', '#ffffff'];
 
+/**
+ * Fábrica (Factory function) para generar una nueva partícula con propiedades físicas 
+ * y de renderizado inicializadas aleatoriamente.
+ *
+ * @param width - El ancho actual del canvas para delimitar el límite de la posición X.
+ * @param height - El alto actual del canvas para delimitar el límite de la posición Y.
+ * @returns Un objeto que implementa la interfaz {@link Particle}.
+ */
 function createParticle(width: number, height: number): Particle {
   return {
     x: Math.random() * width,
@@ -25,7 +51,32 @@ function createParticle(width: number, height: number): Particle {
   };
 }
 
+/**
+ * Componente React que renderiza un fondo animado de partículas flotantes utilizando HTML5 Canvas.
+ *
+ * ### Características:
+ * - **Responsivo:** Se adapta automáticamente al tamaño de la ventana (`window.innerWidth` y `window.innerHeight`).
+ * - **Interconectado:** Dibuja líneas de conexión dinámicas y translúcidas entre partículas que se aproximan a menos de 120px.
+ * - **Efecto de profundidad:** Aplica fluctuaciones de opacidad (destellos) individuales por partícula.
+ * - **No intrusivo:** Se posiciona de forma fija (`fixed`) cubriendo todo el viewport con `pointer-events: none` para no bloquear clics en la UI.
+ *
+ * @example
+ * ```tsx
+ * import { ParticleBackground } from './ParticleBackground';
+ *
+ * function App() {
+ * return (
+ * <div className="app-container">
+ * <ParticleBackground />
+ * <main>Contenido de la aplicación...</main>
+ * </div>
+ * );
+ * }
+ * ```
+ * * @returns Un elemento JSX con el nodo `<canvas>` configurado para ocupar el fondo.
+ */
 export function ParticleBackground() {
+  /** Referencia mutable apuntando al elemento canvas del DOM. */
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -34,9 +85,15 @@ export function ParticleBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    /** Identificador de la animación devuelto por `requestAnimationFrame` para su posterior limpieza. */
     let animId: number;
+    /** Arreglo que almacena el estado de todas las partículas activas. */
     let particles: Particle[] = [];
 
+    /**
+     * Ajusta el tamaño físico del canvas al viewport del navegador
+     * y reinicializa el arreglo de partículas.
+     */
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -45,6 +102,11 @@ export function ParticleBackground() {
       );
     };
 
+    /**
+     * Bucle principal de renderizado (Render Loop).
+     * Se encarga de limpiar el lienzo, calcular distancias para dibujar las líneas interconectoras,
+     * actualizar la posición/opacidad de las partículas y gestionar los rebotes en los límites de la pantalla.
+     */
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -90,10 +152,12 @@ export function ParticleBackground() {
       animId = requestAnimationFrame(draw);
     };
 
+    // Inicialización y registro de escuchas de eventos
     resize();
     draw();
     window.addEventListener('resize', resize);
 
+    // Ciclo de desmonte (Clean-up) del efecto de React
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('resize', resize);
