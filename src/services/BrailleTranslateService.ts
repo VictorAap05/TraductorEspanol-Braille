@@ -1,5 +1,5 @@
-import { BrailleDictionary } from './BrailleDictionary';
-import type { BrailleMatrix } from './BrailleDictionary';
+import { BrailleDictionary } from "./BrailleDictionary";
+import type { BrailleMatrix } from "./BrailleDictionary";
 
 /**
  * Representa el resultado de la traducción de un carácter individual al sistema Braille.
@@ -23,7 +23,6 @@ export interface TraduccionBraille {
  * estado reactivo, cumpliendo el Principio de Responsabilidad Única.
  */
 export class BrailleTranslatorService {
-
   /**
    * Procesa una cadena de texto en español y devuelve un arreglo de cuadratines Braille.
    *
@@ -69,25 +68,23 @@ export class BrailleTranslatorService {
       const char = texto[i];
 
       // ── Espacios: reinician el modo número y se emiten como celda vacía ──
-      if (char === ' ') {
+      if (char === " ") {
         enModoNumero = false;
-        resultado.push(this.crearNodo(char, BrailleDictionary[' ']));
+        resultado.push(this.crearNodo(char, BrailleDictionary[" "]));
         i++;
         continue;
       }
 
-      // ── Dígrafos: ch / ll (también en mayúsculas como CH, LL) ──
-      const doble = texto.slice(i, i + 2).toLowerCase();
-      if ((doble === 'ch' || doble === 'll') && BrailleDictionary[doble]) {
-        enModoNumero = false;
-        const esMayus = /[A-ZÁÉÍÓÚÑÜ]/.test(char);
-        if (esMayus) {
-          resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
+      // ── Signos decimales o miles (. ,) dentro de secuencia numérica (no reinician el modo número) ──
+      if (enModoNumero && (char === "." || char === ",")) {
+        const matrizPunto = BrailleDictionary[char];
+        if (matrizPunto) {
+          resultado.push(this.crearNodo(char, matrizPunto));
         }
-        resultado.push(this.crearNodo(texto.slice(i, i + 2), BrailleDictionary[doble]));
-        i += 2;
+        i++;
         continue;
       }
+
 
       // ── Números: busca el dígito directamente en el diccionario ──
       // FIX: antes se usaba String.fromCharCode(charCode + 48) para convertir
@@ -98,7 +95,13 @@ export class BrailleTranslatorService {
       // BrailleDictionary y se acceden directamente con la clave del carácter.
       if (/[0-9]/.test(char)) {
         if (!enModoNumero) {
-          resultado.push(this.crearNodo('PREFIJO_NUM', BrailleDictionary['PREFIJO_NUMERO'], true));
+          resultado.push(
+            this.crearNodo(
+              "PREFIJO_NUM",
+              BrailleDictionary["PREFIJO_NUMERO"],
+              true,
+            ),
+          );
           enModoNumero = true;
         }
         resultado.push(this.crearNodo(char, BrailleDictionary[char]));
@@ -115,37 +118,64 @@ export class BrailleTranslatorService {
       //   • Primera letra en mayúscula (ej. "Hola") → prefijo simple antes de esa letra.
       //   • Mayúscula en medio de secuencia mixta → prefijo simple ante esa letra.
       if (/[A-ZÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ]/.test(char)) {
-        
-        const reLetraOGuion = /[A-Za-záéíóúñüàèìòùâêîôûäëïöúÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ-]/;
+        const reLetraOGuion =
+          /[A-Za-záéíóúñüàèìòùâêîôûäëïöúÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ-]/;
 
         // Encontrar inicio y fin de la secuencia (letras + guión como separador interno)
         let inicioSec = i;
-        while (inicioSec > 0 && reLetraOGuion.test(texto[inicioSec - 1])) inicioSec--;
+        while (inicioSec > 0 && reLetraOGuion.test(texto[inicioSec - 1]))
+          inicioSec--;
         let finSec = i;
-        while (finSec < texto.length && reLetraOGuion.test(texto[finSec])) finSec++;
+        while (finSec < texto.length && reLetraOGuion.test(texto[finSec]))
+          finSec++;
 
         // Solo letras de la secuencia (sin guión) para evaluar si toda está en mayúsculas
-        const soloLetras = texto.slice(inicioSec, finSec).replace(/-/g, '');
+        const soloLetras = texto.slice(inicioSec, finSec).replace(/-/g, "");
 
         // Primera letra real de la secuencia (primera posición que no sea guión)
         let primeraPos = inicioSec;
-        while (primeraPos < finSec && texto[primeraPos] === '-') primeraPos++;
+        while (primeraPos < finSec && texto[primeraPos] === "-") primeraPos++;
 
         const esPrimeraLetra = i === primeraPos;
-        const todaEnMayusculas = soloLetras.length > 1 && soloLetras === soloLetras.toUpperCase();
+        const todaEnMayusculas =
+          soloLetras.length > 1 && soloLetras === soloLetras.toUpperCase();
 
         if (esPrimeraLetra) {
           if (todaEnMayusculas) {
             // Toda la secuencia en mayúsculas → doble prefijo únicamente al inicio
-            resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
-            resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
+            resultado.push(
+              this.crearNodo(
+                "PREFIJO_MAY",
+                BrailleDictionary["PREFIJO_MAYUSCULA"],
+                true,
+              ),
+            );
+            resultado.push(
+              this.crearNodo(
+                "PREFIJO_MAY",
+                BrailleDictionary["PREFIJO_MAYUSCULA"],
+                true,
+              ),
+            );
           } else {
             // Primera letra en mayúscula → prefijo simple
-            resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
+            resultado.push(
+              this.crearNodo(
+                "PREFIJO_MAY",
+                BrailleDictionary["PREFIJO_MAYUSCULA"],
+                true,
+              ),
+            );
           }
         } else if (!todaEnMayusculas) {
           // Mayúscula en secuencia mixta → prefijo simple ante esta letra
-          resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
+          resultado.push(
+            this.crearNodo(
+              "PREFIJO_MAY",
+              BrailleDictionary["PREFIJO_MAYUSCULA"],
+              true,
+            ),
+          );
         }
         // Si todaEnMayusculas && no es la primera letra → sin prefijo extra
       }
@@ -179,7 +209,11 @@ export class BrailleTranslatorService {
    * @param esPrefijo - `true` si el nodo representa un prefijo de control. Por defecto `false`.
    * @returns Un objeto {@link TraduccionBraille} listo para ser añadido al resultado.
    */
-  private static crearNodo(char: string, matriz: BrailleMatrix, esPrefijo = false): TraduccionBraille {
+  private static crearNodo(
+    char: string,
+    matriz: BrailleMatrix,
+    esPrefijo = false,
+  ): TraduccionBraille {
     return { caracterOriginal: char, matriz, esPrefijo };
   }
 }

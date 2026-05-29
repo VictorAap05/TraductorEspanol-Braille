@@ -83,8 +83,6 @@ export const BrailleDictionary: Record<string, BrailleMatrix> = {
 
   // --- Letras especiales del español ---
   'ñ': crearCuadratin([1, 2, 4, 5, 6]),
-  'ch': crearCuadratin([1, 6]),       // dígrafo tradicional español
-  'll': crearCuadratin([1, 2, 3, 6]), // dígrafo tradicional español
 
   // --- Signos de puntuación ---
   '.':  crearCuadratin([3]),
@@ -120,7 +118,7 @@ export const BrailleDictionary: Record<string, BrailleMatrix> = {
   '7': crearCuadratin([1, 2, 4, 5]),
   '8': crearCuadratin([1, 2, 5]),
   '9': crearCuadratin([2, 4]),
-  '0': crearCuadratin([1, 4, 5, 6]), // En braille español el 0 es ⠹ (puntos 1,4,5,6)
+  '0': crearCuadratin([2, 4, 5]),
 
   // --- Prefijos ---
   'PREFIJO_NUMERO':    crearCuadratin([3, 4, 5, 6]),
