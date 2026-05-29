@@ -115,7 +115,7 @@ export class BrailleTranslatorService {
       //   • Primera letra en mayúscula (ej. "Hola") → prefijo simple antes de esa letra.
       //   • Mayúscula en medio de secuencia mixta → prefijo simple ante esa letra.
       if (/[A-ZÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ]/.test(char)) {
-        const reLetra = /[A-Za-záéíóúñüàèìòùâêîôûäëïöúÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ]/;
+        
         const reLetraOGuion = /[A-Za-záéíóúñüàèìòùâêîôûäëïöúÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ-]/;
 
         // Encontrar inicio y fin de la secuencia (letras + guión como separador interno)
