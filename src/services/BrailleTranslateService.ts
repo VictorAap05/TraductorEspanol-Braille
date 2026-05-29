@@ -28,18 +28,17 @@ export class BrailleTranslatorService {
    *
    * Aplica las siguientes reglas en orden de prioridad:
    * 1. **Espacios** — se traducen directamente y reinician el modo número.
-   * 2. **Dígrafos** (`ch`, `ll`) — se detectan como unidad y consumen dos caracteres.
-   * 3. **Números** — se antepone el prefijo de número al inicio de cada secuencia numérica.
-   *    Los dígitos se buscan **directamente** en {@link BrailleDictionary} (claves `'0'`–`'9'`),
-   *    eliminando la conversión implícita por `charCodeAt` que causaba que el `'0'`
-   *    fallara (ASCII 48 + 48 = 96 = backtick, sin entrada en el diccionario).
-   * 4. **Mayúsculas** — aplica la regla de prefijado según el contexto de la palabra:
-   *    - **Palabra completa en mayúsculas** → doble prefijo `⠨⠨` solo al inicio de la palabra.
-   *    - **Letra mayúscula aislada** → prefijo simple `⠨` antes de esa letra.
-   *    Antes del fix, el código colocaba un prefijo simple antes de *cada* letra
-   *    mayúscula individualmente, lo que producía prefijos múltiples en palabras como
-   *    `FIS-EPN` en lugar del doble prefijo inicial requerido por el estándar Braille.
-   * 5. **Caracteres no soportados** — se emite un nodo con matriz vacía y `noSoportado: true`.
+   * 2. **Números** — se antepone el prefijo de número al inicio de cada secuencia numérica.
+   * Los dígitos se buscan **directamente** en {@link BrailleDictionary} (claves `'0'`–`'9'`),
+   * eliminando la conversión implícita por `charCodeAt` que causaba que el `'0'`
+   * fallara (ASCII 48 + 48 = 96 = backtick, sin entrada en el diccionario).
+   * 3. **Mayúsculas** — aplica la regla de prefijado según el contexto de la palabra:
+   * - **Palabra completa en mayúsculas** → doble prefijo `⠨⠨` solo al inicio de la palabra.
+   * - **Letra mayúscula aislada** → prefijo simple `⠨` antes de esa letra.
+   * Antes del fix, el código colocaba un prefijo simple antes de *cada* letra
+   * mayúscula individualmente, lo que producía prefijos múltiples en palabras como
+   * `FIS-EPN` en lugar del doble prefijo inicial requerido por el estándar Braille.
+   * 4. **Caracteres no soportados** — se emite un nodo con matriz vacía y `noSoportado: true`.
    *
    * @param texto - La cadena de texto en español a traducir.
    * @returns Arreglo de objetos {@link TraduccionBraille} listos para ser renderizados.
