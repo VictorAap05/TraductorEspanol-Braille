@@ -1,122 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useBrailleTranslator } from './hooks/useBrailleTranslator';
+import { usePdfExport } from './hooks/usePdfExport';
+import { BrailleCell } from './components/BrailleCell/BrailleCell';
+import { ParticleBackground } from './components/ParticleBackground/ParticleBackground';
+import './styles.css';
 
+/**
+ * Componente raíz de la aplicación.
+ * Orquesta los hooks de la Capa de Adaptación y delega el renderizado
+ * a los componentes especializados.
+ */
 function App() {
-  const [count, setCount] = useState(0)
+  const { textoOriginal, setTextoOriginal, traduccion } = useBrailleTranslator();
+  const { exportarPdf, exportando } = usePdfExport();
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      {/* Fondo animado — fixed, detrás de todo */}
+      <ParticleBackground />
 
-      <div className="ticks"></div>
+      {/* Contenido principal — encima del canvas */}
+      <div className="app-wrapper">
+        <h1 className="app-title">
+          Traductor Español - Braille
+        </h1>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+        {/* Captura de entrada de texto */}
+        <div className="input-section">
+          <label htmlFor="text-input" className="input-label">
+            Ingrese el texto a señalizar:
+          </label>
+          <textarea
+            id="text-input"
+            className="input-textarea"
+            value={textoOriginal}
+            onChange={(e) => setTextoOriginal(e.target.value)}
+            placeholder="Escribe aquí números, mayúsculas o vocales acentuadas..."
+          />
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        {/* Contenedor de renderizado iterativo */}
+        <div className="braille-output-container">
+          {traduccion.length === 0 && (
+            <p className="braille-output-empty">
+              La vista previa de la señalética aparecerá aquí...
+            </p>
+          )}
+          {traduccion.map((nodo, index) => (
+            <BrailleCell
+              key={index}
+              matriz={nodo.matriz}
+              caracterOriginal={nodo.esPrefijo ? 'PREF' : nodo.caracterOriginal}
+            />
+          ))}
+        </div>
+
+        {/* Botón de exportación — solo visible cuando hay contenido */}
+        {traduccion.length > 0 && (
+          <div className="export-section">
+            <button
+              className="export-btn"
+              onClick={() => exportarPdf(textoOriginal, traduccion)}
+              disabled={exportando}
+            >
+              {exportando ? 'Generando PDF...' : 'Exportar traducción a PDF'}
+            </button>
+          </div>
+        )}
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
