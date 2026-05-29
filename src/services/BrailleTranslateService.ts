@@ -1,73 +1,79 @@
 import { BrailleDictionary } from './BrailleDictionary';
 import type { BrailleMatrix } from './BrailleDictionary';
 
-/**
- * Representa el resultado de la traducción de un carácter individual.
- */
 export interface TraduccionBraille {
-  /** El carácter original en español. */
   caracterOriginal: string;
-  /** La representación matricial de 6 puntos (cuadratín). */
   matriz: BrailleMatrix;
-  /** Indica si este nodo es un prefijo (ej. prefijo de mayúscula o número). */
   esPrefijo: boolean;
+  /** true si el carácter no tiene representación en el diccionario */
+  noSoportado?: boolean;
 }
 
-/**
- * Servicio encargado de la lógica pura de traducción de texto en español
- * al sistema de lectoescritura Braille.
- */
 export class BrailleTranslatorService {
-  /**
-   * Procesa una cadena de texto y devuelve un array de cuadratines Braille.
-   * Maneja automáticamente la inserción de prefijos para números y mayúsculas.
-   * @param texto - La cadena de texto en español a traducir.
-   * @returns Un arreglo de objetos `TraduccionBraille` listos para ser renderizados.
-   */
   static traducirTexto(texto: string): TraduccionBraille[] {
     const resultado: TraduccionBraille[] = [];
     let enModoNumero = false;
+    let i = 0;
 
-    for (let i = 0; i < texto.length; i++) {
+    while (i < texto.length) {
       const char = texto[i];
 
-      // Manejo de espacios (reinicia el modo número)
+      // Espacios (reinicia modo número)
       if (char === ' ') {
         enModoNumero = false;
         resultado.push(this.crearNodo(char, BrailleDictionary[' ']));
+        i++;
         continue;
       }
 
-      // Evaluar números (HU03)
+      // Dígrafos: ch, ll (minúsculas y mayúsculas)
+      const doble = texto.slice(i, i + 2).toLowerCase();
+      if ((doble === 'ch' || doble === 'll') && BrailleDictionary[doble]) {
+        enModoNumero = false;
+        const esMayus = /[A-ZÁÉÍÓÚÑÜ]/.test(char);
+        if (esMayus) {
+          resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
+        }
+        resultado.push(this.crearNodo(texto.slice(i, i + 2), BrailleDictionary[doble]));
+        i += 2;
+        continue;
+      }
+
+      // Números
       if (/[0-9]/.test(char)) {
         if (!enModoNumero) {
           resultado.push(this.crearNodo('PREFIJO_NUM', BrailleDictionary['PREFIJO_NUMERO'], true));
           enModoNumero = true;
         }
-        // Los números usan la Serie 1 (1 = a, 2 = b, 0 = j)
         const letraEquivalente = char === '0' ? 'j' : String.fromCharCode(char.charCodeAt(0) + 48);
         resultado.push(this.crearNodo(char, BrailleDictionary[letraEquivalente]));
+        i++;
         continue;
       }
 
-      // Si encontramos una letra, salimos del modo número
       enModoNumero = false;
 
-      // Evaluar mayúsculas (HU04)
-      if (/[A-ZÁÉÍÓÚÑÜ]/.test(char)) {
+      // Mayúsculas
+      if (/[A-ZÁÉÍÓÚÑÜÀÈÌÒÙÂÊÎÔÛÄËÏÖÚ]/.test(char)) {
         resultado.push(this.crearNodo('PREFIJO_MAY', BrailleDictionary['PREFIJO_MAYUSCULA'], true));
       }
 
-      // Buscar el carácter en minúscula en el diccionario
-      const charMinuscula = char.toLowerCase();
-      const matrizBraille = BrailleDictionary[charMinuscula];
+      const charMin = char.toLowerCase();
+      const matrizBraille = BrailleDictionary[charMin];
 
       if (matrizBraille) {
         resultado.push(this.crearNodo(char, matrizBraille));
       } else {
-        // Manejo de error o carácter no soportado
-        console.warn(`Carácter no soportado: ${char}`);
+        // Carácter no soportado: se muestra con matriz vacía y marcado visualmente
+        resultado.push({
+          caracterOriginal: char,
+          matriz: [false, false, false, false, false, false],
+          esPrefijo: false,
+          noSoportado: true,
+        });
       }
+
+      i++;
     }
 
     return resultado;
