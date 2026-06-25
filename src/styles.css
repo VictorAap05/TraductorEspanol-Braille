@@ -1,455 +1,498 @@
+/* ── Variables de diseño ──────────────────────────────────────── */
 :root {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #9ac9d0;
   --border: #125565;
   --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --accent: #30515f;
+  --accent-hover: #1e3a45;
+  --accent-bg: rgba(48, 81, 95, 0.08);
+  --card-bg: #ffffff;
+  --panel-bg: #f8fbfb;
+  --dot-active: #125565;
+  --dot-inactive: #d3e8eb;
+  --shadow-card: 0 4px 24px rgba(18, 85, 101, 0.12), 0 1px 4px rgba(0,0,0,0.06);
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  font: 16px/145% var(--sans);
   color: var(--text);
-  background: #c5dee2; /* fallback si canvas no carga */
+  background: linear-gradient(135deg, #c5dee2 0%, #a8cfd5 100%);
+  min-height: 100vh;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
+    --text: #0d0e0e;
+    --text-h: #000000;
     --bg: #16171d;
     --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
-      rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+    --card-bg: #eee8e8;
+    --panel-bg: #F0F4F9;
+    --dot-active: #4a9db5;
+    --dot-inactive: #3d5068;
+    --accent: #4a9db5;
+    --accent-hover: #3a8a9f;
+    --accent-bg: rgba(74, 157, 181, 0.12);
+    --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
   }
 }
 
+/* ── Reset  */
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; }
+p { margin: 0; }
+button { font-family: inherit; cursor: pointer; }
 
-/* ── 2. Reset y estilos globales ────────────────────────────── */
-
-body {
-  margin: 0;
-}
-
-p {
-  margin: 0;
-}
-
-
-/* ── 3. Tipografía ──────────────────────────────────────────── */
-
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
-
-
-/* ── 4. Layout principal ────────────────────────────────────── */
-
+/* ── Layout raíz */
 #root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
 }
 
-#center {
+/* ── Wrapper de la app */
+.app-wrapper {
+  padding: 32px 20px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Título  */
+.app-title {
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  color: #1a3840;
+  margin: 0 0 32px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  letter-spacing: -0.5px;
+}
+
+/* ── Tarjeta del traductor */
+.translator-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  border: 1px solid rgba(18, 85, 101, 0.12);
+}
+
+/* ── Cabecera de idiomas */
+.translator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  border-bottom: 1px solid rgba(18, 85, 101, 0.1);
+  background: var(--panel-bg);
+  min-height: 56px;
+  gap: 12px;
+}
+
+.lang-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  padding: 16px 8px;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  justify-content: center;
+}
+
+.lang-tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.lang-tab-icon {
+  font-size: 18px;
+}
+
+/* ── Botón de intercambio */
+.swap-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(18, 85, 101, 0.2);
+  background: var(--card-bg);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.swap-btn:hover {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  transform: rotate(180deg);
+}
+
+/* ── Paneles */
+.translator-panels {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  min-height: 340px;
+}
+
+.translator-divider {
+  background: rgba(18, 85, 101, 0.1);
+  width: 1px;
+}
+
+.translator-panel {
+  padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  gap: 12px;
 }
 
-#next-steps {
-  display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  &>div {
-    flex: 1 1 0;
-    padding: 32px;
-
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+.translator-panel--output {
+  background: var(--panel-bg);
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.panel-lang-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text);
+  opacity: 0.6;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
-}
-
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
-  position: relative;
+/* ── Textarea del panel */
+.panel-textarea {
+  flex: 1;
   width: 100%;
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
-
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
-}
-
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
-
-  &:hover {
-    border-color: var(--accent-border);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.8);
-  }
-}
-
-
-/* ── 5. Componentes de App ──────────────────────────────────── */
-
-.app-wrapper {
-  padding: 40px;
-  font-family: sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 1;
-}
-
-.app-title {
-  font-size: 40px;
-  font-weight: bold;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-align: center;
-  color: #30515f;
-  margin-bottom: 50px;
-  text-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08);
-
-}
-
-.input-section {
-  margin-bottom: 30px;
-}
-
-.input-label {
-  color: #08060d;
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.input-textarea {
-  width: 100%;
-  height: 100px;
+  min-height: 240px;
   padding: 12px;
   font-size: 16px;
+  font-family: inherit;
+  line-height: 1.6;
+  border: none;
   border-radius: 8px;
-  color: #08060d;
-  background-color: #e9e8e8;
-  border: 1px solid #ccc;
+  background: transparent;
+  color: var(--text-h);
   resize: vertical;
-  box-sizing: border-box;
+  outline: none;
 }
 
+.panel-textarea::placeholder {
+  color: var(--text);
+  opacity: 0.45;
+}
+
+/* ── Salida Braille (panel derecho)  */
 .braille-output-container {
   display: flex;
-  gap: 16px;
+  gap: 6px;
   flex-wrap: wrap;
-  padding: 24px;
-  background-color: #dbedeb;
+  padding: 10px;
+  background: rgba(18, 85, 101, 0.04);
   border-radius: 8px;
-  min-height: 150px;
-  border: 2px dashed #ccc;
+  min-height: 160px;
+  border: 2px dashed rgba(18, 85, 101, 0.15);
   align-items: flex-start;
+  align-content: flex-start;
+  flex: 1;
 }
 
 .braille-output-empty {
-  color: #888;
+  color: var(--text);
+  opacity: 0.45;
   margin: auto;
   font-style: italic;
+  font-size: 14px;
+  text-align: center;
 }
 
+/* ── Salida Español (modo Braille - Español) */
+.espanol-output-container {
+  padding: 16px;
+  background: rgba(18, 85, 101, 0.04);
+  border-radius: 8px;
+  min-height: 200px;
+  border: 2px dashed rgba(18, 85, 101, 0.15);
+  display: flex;
+  align-items: flex-start;
+  flex: 1;
+}
 
-/* ── 6. Componente BrailleCell ──────────────────────────────── */
+.espanol-output-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-h);
+  line-height: 1.6;
+  word-break: break-word;
+}
 
+/* ── Componente BrailleCell  */
 .braille-cell-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 4px;
+  margin: 2px;
 }
 
 .braille-grid {
   display: grid;
-  grid-template-columns: repeat(2, 12px);
-  grid-template-rows: repeat(3, 12px);
-  gap: 8px;
-  padding: 10px;
-  border: 1px solid #ccc;
+  grid-template-columns: repeat(2, 8px);
+  grid-template-rows: repeat(3, 8px);
+  gap: 5px;
+  padding: 6px;
+  border: 1px solid rgba(18, 85, 101, 0.15);
   border-radius: 4px;
-  background-color: rgb(255, 255, 255);
+  background: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .braille-grid {
+    background: #252835;
+  }
 }
 
 .braille-dot {
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.18s ease;
 }
 
-.braille-dot.active {
-  background-color: black;
-}
-
-.braille-dot.inactive {
-  background-color: #d3d3d3;
-}
+.braille-dot.active  { background-color: var(--dot-active); }
+.braille-dot.inactive { background-color: var(--dot-inactive); }
 
 .braille-char {
-  margin-top: 6px;
-  font-size: 16px;
-  font-weight: bold;
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 600;
   color: #555;
   text-align: center;
-  min-height: 20px;
+  min-height: 14px;
 }
 
+.braille-cell--unsupported .braille-grid { border-color: #e57373; background: #fff8f8; }
+.braille-char--unsupported { color: #e57373; }
 
+/* ── Teclado Braille en pantalla */
+.panel-braille-input {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
+.braille-keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--accent-bg);
+  border-radius: 12px;
+  border: 1px solid rgba(18, 85, 101, 0.12);
+}
+
+.keyboard-cell-preview-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.keyboard-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0;
+}
+
+.keyboard-hint {
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.7;
+  text-align: center;
+  margin: 0;
+}
+
+.keyboard-cell-preview {
+  padding: 8px;
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 2px solid rgba(18, 85, 101, 0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Grid del teclado */
+.keyboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 48px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 10px;
+  padding: 12px;
+}
+
+.keyboard-dot {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(18, 85, 101, 0.25);
+  background: var(--dot-inactive);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, border-color 0.15s, box-shadow 0.15s;
+  position: relative;
+}
+
+.keyboard-dot:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+.keyboard-dot.active {
+  background: var(--dot-active);
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(18, 85, 101, 0.35);
+}
+
+.keyboard-dot.active .keyboard-dot-label {
+  color: #ffffff;
+}
+
+.keyboard-dot-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(18, 85, 101, 0.6);
+  pointer-events: none;
+  transition: color 0.15s;
+}
+
+/* ── Botones de acción del teclado */
+.keyboard-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.keyboard-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
+}
+
+.keyboard-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.keyboard-btn--primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.keyboard-btn--primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.keyboard-btn--space {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.keyboard-btn--space:hover {
+  background: var(--accent-bg);
+}
+
+.keyboard-btn--delete {
+  background: transparent;
+  color: #c0392b;
+  border-color: #e57373;
+}
+.keyboard-btn--delete:hover:not(:disabled) {
+  background: rgba(192, 57, 43, 0.08);
+}
+
+.keyboard-btn--clear {
+  background: transparent;
+  color: var(--text);
+  border-color: rgba(18, 85, 101, 0.2);
+}
+.keyboard-btn--clear:hover:not(:disabled) {
+  background: rgba(0,0,0,0.04);
+}
+
+.keyboard-count {
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.6;
+  margin: 0;
+}
+
+/* Vista previa de celdas ingresadas (modo Braille - Español) */
+.braille-input-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px;
+  background: rgba(18, 85, 101, 0.04);
+  border-radius: 8px;
+  border: 1px dashed rgba(18, 85, 101, 0.2);
+  min-height: 64px;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+/* ── Exportar PDF */
 .export-section {
   margin-top: 20px;
   display: flex;
+  justify-content: flex-start;
+}
+
+/* Botón exportar lateral junto al teclado */
+.export-section--lateral {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-end;
+  padding-bottom: 2px;
+  flex-shrink: 0;
 }
 
 .export-btn {
   padding: 10px 22px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #ffffff;
-  background-color: #30515f;
+  background: var(--accent);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: background 0.2s, transform 0.1s, opacity 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
 .export-btn:hover:not(:disabled) {
-  background-color: #1e3a45;
+  background: var(--accent-hover);
   transform: translateY(-1px);
-}
-
-.export-btn:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .export-btn:disabled {
@@ -457,12 +500,305 @@ code {
   cursor: not-allowed;
 }
 
-@media (prefers-color-scheme: dark) {
-  .export-btn {
-    background-color: #4a8fa0;
-  }
+.export-section--lateral .export-btn {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  padding: 16px 10px;
+  font-size: 12px;
+  height: auto;
+  white-space: nowrap;
+}
 
-  .export-btn:hover:not(:disabled) {
-    background-color: #3a7a8a;
+/* ── Responsive */
+@media (max-width: 640px) {
+  .app-title { font-size: 24px; }
+  .translator-panels {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1px auto;
   }
+  .translator-divider {
+    width: 100%;
+    height: 1px;
+  }
+  .translator-panel { padding: 16px; }
+  .translator-header { padding: 0 12px; }
+}
+
+/* 
+   TECLADO BRAILLE VISUAL
+
+/* Sección que envuelve el teclado */
+.keyboard-section {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Contenedor principal del teclado */
+.kbd-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 10px 10px;
+  background: #1a1a1a;
+  border-radius: 14px;
+  border: 1px solid #2e2e2e;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  user-select: none;
+  width: auto;
+  box-sizing: border-box;
+}
+
+/* Cada fila de teclas */
+.kbd-row {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+/* Offset fila A */
+.kbd-row--offset-a {
+  padding-left: 28px;
+}
+
+/* Fila inferior */
+.kbd-row--bottom {
+  margin-top: 2px;
+  align-items: center;
+}
+
+/* ── Tecla base ── */
+.kbd-key {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding: 7px 4px 5px;
+  min-width: 42px;
+  height: 56px;
+  background: #2d2d2d;
+  border: 1px solid #3a3a3a;
+  border-bottom: 3px solid #111;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.1s, transform 0.08s, box-shadow 0.08s;
+  color: #e0e0e0;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.kbd-key:hover {
+  background: #383838;
+  border-color: #4a9db5;
+  box-shadow: 0 0 0 1px #4a9db5;
+}
+
+.kbd-key:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+  background: #1e3840;
+  border-color: #4a9db5;
+}
+
+/* Tecla con mayúscula activa */
+.kbd-key--caps-on {
+  border-top: 2px solid #4a9db5;
+}
+
+/* Tecla número */
+.kbd-key--num-on {
+  border-top: 2px solid #f0a832;
+}
+
+.kbd-key--num-on .kbd-dot--active {
+  background-color: #f0a832;
+}
+
+/* ── Etiquetas  */
+.kbd-key-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #dddddd;
+  line-height: 1;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.kbd-key-label--small {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* ── Mini cuadratín*/
+.kbd-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 6px);
+  grid-template-rows: repeat(3, 6px);
+  gap: 2px;
+  padding: 3px;
+  background: #111;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.kbd-grid--empty {
+  width: 18px;
+  height: 24px;
+}
+
+.kbd-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.kbd-dot--active   { background-color: #ffffff; }
+.kbd-dot--inactive { background-color: #3a3a3a; }
+
+/* ── Teclas de acción genéricas */
+.kbd-key--action {
+  background: #222;
+  border-color: #333;
+  color: #aaa;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.kbd-key--action:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+/* Backspace */
+.kbd-key--backspace {
+  min-width: 50px;
+  font-size: 17px;
+}
+
+.kbd-key--backspace:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Tecla MAYUS */
+.kbd-key--shift {
+  min-width: 52px;
+  background: #222;
+  border-color: #333;
+  gap: 3px;
+}
+
+.kbd-key--shift:hover {
+  background: #2a2a2a;
+  border-color: #4a9db5;
+}
+
+.kbd-key--shift-on {
+  background: #1e3840 !important;
+  border-color: #4a9db5 !important;
+  box-shadow: 0 0 0 1px #4a9db5;
+}
+
+.kbd-key--shift-on .kbd-dot--active {
+  background-color: #4a9db5;
+}
+
+/* Resaltado dígitos en modo número */
+.kbd-key--num-on {
+  border-top: 2px solid #e6a817 !important;
+}
+
+.kbd-key--num-on .kbd-dot--active {
+  background-color: #e6a817;
+}
+
+/* Tecla &123 */
+.kbd-key--sym {
+  min-width: 58px;
+  background: #222;
+  border-color: #333;
+  gap: 3px;
+}
+
+.kbd-key--sym:hover {
+  background: #2a2a2a;
+  border-color: #4a9db5;
+}
+
+/* Barra de espacio */
+.kbd-key--space {
+  flex: 1;
+  max-width: 420px;
+  height: 38px;
+  background: #2d2d2d;
+  border: 1px solid #3a3a3a;
+  border-bottom: 3px solid #111;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #999;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.1s;
+}
+
+.kbd-key--space:hover {
+  background: #383838;
+  border-color: #4a9db5;
+}
+
+.kbd-key--space:active {
+  transform: translateY(1px);
+  border-bottom-width: 1px;
+}
+
+/* Limpiar */
+.kbd-key--clear {
+  font-size: 14px;
+  min-width: 38px;
+  height: 38px;
+  color: #e57373;
+  background: #222;
+  border-color: #333;
+}
+
+.kbd-key--clear:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .kbd-key {
+    min-width: 30px;
+    height: 56px;
+    padding: 5px 2px 4px;
+    border-radius: 6px;
+  }
+  .kbd-key-label { font-size: 11px; }
+  .kbd-key-label--small { font-size: 9px; }
+  .kbd-dot { width: 5px; height: 5px; }
+  .kbd-grid {
+    grid-template-columns: repeat(2, 5px);
+    grid-template-rows: repeat(3, 5px);
+    gap: 2px;
+    padding: 3px;
+  }
+  .kbd-key--backspace { min-width: 38px; font-size: 16px; }
+  .kbd-key--shift     { min-width: 40px; }
+  .kbd-key--sym       { min-width: 46px; }
+  .kbd-row { gap: 3px; }
+  .kbd-wrapper { padding: 10px 8px; gap: 5px; }
+  .kbd-row--offset-a { padding-left: 16px; }
+}
+
+/* ── Panel entrada Braille */
+.panel-braille-input {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
 }
