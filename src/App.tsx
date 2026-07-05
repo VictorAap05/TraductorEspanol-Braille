@@ -32,11 +32,11 @@
  * @module App
  */
 
-import { useBrailleTranslator } from './hooks/useBrailleTranslator';
-import { usePdfExport } from './hooks/usePdfExport';
-import { BrailleCell } from './components/BrailleCell/BrailleCell';
-import { BrailleKeyboard } from './components/BrailleCell/BrailleKeyboard';
-import './styles.css';
+import { useBrailleTranslator } from "./hooks/useBrailleTranslator";
+import { usePdfExport } from "./hooks/usePdfExport";
+import { BrailleCell } from "./components/BrailleCell/BrailleCell";
+import { BrailleKeyboard } from "./components/BrailleCell/BrailleKeyboard";
+import "./styles.css";
 
 /**
  * Componente raíz de la aplicación.
@@ -62,8 +62,8 @@ function App() {
     limpiarBraille,
   } = useBrailleTranslator();
 
-  const { exportarPdf, exportando } = usePdfExport();
-  const modoEspanolBraille = direccion === 'espanol-braille';
+  const { exportarPdf, exportarPdfEspejado, exportando } = usePdfExport();
+  const modoEspanolBraille = direccion === "espanol-braille";
 
   return (
     <div className="app-wrapper">
@@ -71,38 +71,54 @@ function App() {
 
       {/* ── Tarjeta del traductor ── */}
       <div className="translator-card">
-
         {/* Cabecera de idiomas */}
         <div className="translator-header">
-          <div className={`lang-tab ${modoEspanolBraille ? 'lang-tab--active' : ''}`}>
-            <span className="lang-tab-icon">🇪🇸</span>
-            Español
+          <div
+            className={`lang-tab ${modoEspanolBraille ? "lang-tab--active" : ""}`}
+          >
+            <span className="lang-tab-icon">
+              {modoEspanolBraille ? "🇪🇸" : "⠿"}
+            </span>
+            {modoEspanolBraille ? "Español" : "Braille"}
           </div>
 
-          <button className="swap-btn" onClick={cambiarDireccion}
-            title="Intercambiar dirección" aria-label="Intercambiar dirección de traducción">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M8 3L4 7l4 4"/><path d="M4 7h16"/>
-              <path d="M16 21l4-4-4-4"/><path d="M20 17H4"/>
+          <button
+            className="swap-btn"
+            onClick={cambiarDireccion}
+            title="Intercambiar dirección"
+            aria-label="Intercambiar dirección de traducción"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M8 3L4 7l4 4" />
+              <path d="M4 7h16" />
+              <path d="M16 21l4-4-4-4" />
+              <path d="M20 17H4" />
             </svg>
           </button>
 
-          <div className={`lang-tab ${!modoEspanolBraille ? 'lang-tab--active' : ''}`}>
-            <span className="lang-tab-icon">⠿</span>
-            Braille
+          <div
+            className={`lang-tab ${!modoEspanolBraille ? "lang-tab--active" : ""}`}
+          >
+            <span className="lang-tab-icon">
+              {modoEspanolBraille ? "⠿" : "🇪🇸"}
+            </span>
+            {modoEspanolBraille ? "Braille" : "Español"}
           </div>
         </div>
 
         {/* Paneles */}
         <div className="translator-panels">
-
           {/* Panel izquierdo: ENTRADA */}
           <div className="translator-panel translator-panel--input">
-            <div className="panel-lang-label">
-              {modoEspanolBraille ? '🇪🇸 Español' : '⠿ Braille'}
-            </div>
-
             {modoEspanolBraille ? (
               <textarea
                 className="panel-textarea"
@@ -123,7 +139,13 @@ function App() {
                     <BrailleCell
                       key={index}
                       matriz={nodo.matriz}
-                      caracterOriginal={nodo.esPrefijo ? 'PREF' : nodo.caracterOriginal}
+                      caracterOriginal={
+                        nodo.esPrefijo
+                          ? nodo.caracterOriginal === "PREFIJO_MAY"
+                            ? "MAYUS"
+                            : "NUM"
+                          : nodo.caracterOriginal
+                      }
                       noSoportado={nodo.noSoportado}
                     />
                   ))
@@ -137,10 +159,6 @@ function App() {
 
           {/* Panel derecho: SALIDA */}
           <div className="translator-panel translator-panel--output">
-            <div className="panel-lang-label">
-              {modoEspanolBraille ? '⠿ Braille' : '🇪🇸 Español'}
-            </div>
-
             {modoEspanolBraille ? (
               <div className="braille-output-container">
                 {traduccionEspanolBraille.length === 0 ? (
@@ -152,7 +170,13 @@ function App() {
                     <BrailleCell
                       key={index}
                       matriz={nodo.matriz}
-                      caracterOriginal={nodo.esPrefijo ? 'PREF' : nodo.caracterOriginal}
+                      caracterOriginal={
+                        nodo.esPrefijo
+                          ? nodo.caracterOriginal === "PREFIJO_MAY"
+                            ? "MAYUS"
+                            : "NUM"
+                          : nodo.caracterOriginal
+                      }
                       noSoportado={nodo.noSoportado}
                     />
                   ))
@@ -176,10 +200,24 @@ function App() {
       {/* Exportar PDF — solo Español-Braille */}
       {modoEspanolBraille && traduccionEspanolBraille.length > 0 && (
         <div className="export-section">
-          <button className="export-btn"
+          <button
+            className="export-btn"
             onClick={() => exportarPdf(textoEspanol, traduccionEspanolBraille)}
-            disabled={exportando}>
-            {exportando ? 'Generando PDF...' : 'Exportar traducción a PDF'}
+            disabled={exportando}
+          >
+            {exportando ? "Generando PDF..." : "Exportar traducción a PDF"}
+          </button>
+
+          <button
+            className="export-btn export-btn--mirror"
+            onClick={() =>
+              exportarPdfEspejado(textoEspanol, traduccionEspanolBraille)
+            }
+            disabled={exportando}
+          >
+            {exportando
+              ? "Generando PDF..."
+              : "Exportar para relieve (espejado)"}
           </button>
         </div>
       )}
@@ -200,15 +238,29 @@ function App() {
       {/* ── Botón exportar — Braille-Español ── */}
       {!modoEspanolBraille && celdasBrailleEntrada.length > 0 && (
         <div className="export-section">
-          <button className="export-btn"
-            onClick={() => exportarPdf(textoTraducidoEspanol, celdasBrailleEntrada)}
-            disabled={exportando}>
-            {exportando ? 'Generando PDF...' : 'Exportar traducción a PDF'}
+          <button
+            className="export-btn"
+            onClick={() =>
+              exportarPdf(textoTraducidoEspanol, celdasBrailleEntrada)
+            }
+            disabled={exportando}
+          >
+            {exportando ? "Generando PDF..." : "Exportar traducción a PDF"}
+          </button>
+
+          <button
+            className="export-btn export-btn--mirror"
+            onClick={() =>
+              exportarPdfEspejado(textoTraducidoEspanol, celdasBrailleEntrada)
+            }
+            disabled={exportando}
+          >
+            {exportando
+              ? "Generando PDF..."
+              : "Exportar para relieve (espejado)"}
           </button>
         </div>
       )}
-
-      
     </div>
   );
 }

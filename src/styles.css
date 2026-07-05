@@ -59,18 +59,19 @@ button { font-family: inherit; cursor: pointer; }
   padding: 32px 20px 48px;
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
+  width: 90%;
 }
 
 /* ── Título  */
 .app-title {
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 700;
   text-align: center;
   color: #1a3840;
-  margin: 0 0 32px;
+  margin: 0 0 27px;
   text-shadow: 0 2px 8px rgba(0,0,0,0.10);
   letter-spacing: -0.5px;
+  height: 25px;
 }
 
 /* ── Tarjeta del traductor */
@@ -90,8 +91,9 @@ button { font-family: inherit; cursor: pointer; }
   padding: 0 24px;
   border-bottom: 1px solid rgba(18, 85, 101, 0.1);
   background: var(--panel-bg);
-  min-height: 56px;
+  min-height: 45px;
   gap: 12px;
+  height: 45px;
 }
 
 .lang-tab {
@@ -143,7 +145,7 @@ button { font-family: inherit; cursor: pointer; }
 .translator-panels {
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
-  min-height: 340px;
+  min-height: 300px;
 }
 
 .translator-divider {
@@ -160,15 +162,6 @@ button { font-family: inherit; cursor: pointer; }
 
 .translator-panel--output {
   background: var(--panel-bg);
-}
-
-.panel-lang-label {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text);
-  opacity: 0.6;
 }
 
 /* ── Textarea del panel */
@@ -291,161 +284,6 @@ button { font-family: inherit; cursor: pointer; }
   gap: 16px;
 }
 
-.braille-keyboard {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: var(--accent-bg);
-  border-radius: 12px;
-  border: 1px solid rgba(18, 85, 101, 0.12);
-}
-
-.keyboard-cell-preview-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-
-.keyboard-label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 0.6px;
-  margin: 0;
-}
-
-.keyboard-hint {
-  font-size: 12px;
-  color: var(--text);
-  opacity: 0.7;
-  text-align: center;
-  margin: 0;
-}
-
-.keyboard-cell-preview {
-  padding: 8px;
-  background: var(--card-bg);
-  border-radius: 10px;
-  border: 2px solid rgba(18, 85, 101, 0.15);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-/* Grid del teclado */
-.keyboard-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 48px);
-  grid-template-rows: repeat(3, 48px);
-  gap: 10px;
-  padding: 12px;
-}
-
-.keyboard-dot {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2.5px solid rgba(18, 85, 101, 0.25);
-  background: var(--dot-inactive);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s, border-color 0.15s, box-shadow 0.15s;
-  position: relative;
-}
-
-.keyboard-dot:hover {
-  transform: scale(1.1);
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-bg);
-}
-
-.keyboard-dot.active {
-  background: var(--dot-active);
-  border-color: var(--accent);
-  box-shadow: 0 2px 8px rgba(18, 85, 101, 0.35);
-}
-
-.keyboard-dot.active .keyboard-dot-label {
-  color: #ffffff;
-}
-
-.keyboard-dot-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(18, 85, 101, 0.6);
-  pointer-events: none;
-  transition: color 0.15s;
-}
-
-/* ── Botones de acción del teclado */
-.keyboard-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.keyboard-btn {
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  border: 2px solid transparent;
-  transition: background 0.2s, transform 0.1s, opacity 0.2s;
-}
-
-.keyboard-btn:disabled {
-  opacity: 0.38;
-  cursor: not-allowed;
-}
-
-.keyboard-btn--primary {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-.keyboard-btn--primary:hover:not(:disabled) {
-  background: var(--accent-hover);
-}
-
-.keyboard-btn--space {
-  background: transparent;
-  color: var(--accent);
-  border-color: var(--accent);
-}
-.keyboard-btn--space:hover {
-  background: var(--accent-bg);
-}
-
-.keyboard-btn--delete {
-  background: transparent;
-  color: #c0392b;
-  border-color: #e57373;
-}
-.keyboard-btn--delete:hover:not(:disabled) {
-  background: rgba(192, 57, 43, 0.08);
-}
-
-.keyboard-btn--clear {
-  background: transparent;
-  color: var(--text);
-  border-color: rgba(18, 85, 101, 0.2);
-}
-.keyboard-btn--clear:hover:not(:disabled) {
-  background: rgba(0,0,0,0.04);
-}
-
-.keyboard-count {
-  font-size: 12px;
-  color: var(--text);
-  opacity: 0.6;
-  margin: 0;
-}
-
 /* Vista previa de celdas ingresadas (modo Braille - Español) */
 .braille-input-preview {
   display: flex;
@@ -488,6 +326,7 @@ button { font-family: inherit; cursor: pointer; }
   cursor: pointer;
   transition: background 0.2s, transform 0.1s, opacity 0.2s;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  margin-right: 8px;
 }
 
 .export-btn:hover:not(:disabled) {
@@ -531,6 +370,7 @@ button { font-family: inherit; cursor: pointer; }
 .keyboard-section {
   margin-top: 12px;
   display: flex;
+  justify-content: center;
   flex-direction: row;
   align-items: flex-start;
   gap: 12px;
@@ -578,7 +418,7 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: flex-end;
   gap: 4px;
   padding: 7px 4px 5px;
-  min-width: 42px;
+  min-width: 60px;
   height: 56px;
   background: #2d2d2d;
   border: 1px solid #3a3a3a;
@@ -675,7 +515,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* Backspace */
 .kbd-key--backspace {
-  min-width: 50px;
+  min-width: 60px;
   font-size: 17px;
 }
 
@@ -801,4 +641,12 @@ button { font-family: inherit; cursor: pointer; }
   flex-direction: column;
   gap: 12px;
   overflow-y: auto;
+}
+
+.export-btn--mirror {
+  background-color: #4a7a6a;
+}
+
+.export-btn--mirror:hover:not(:disabled) {
+  background-color: #3a6a5a;
 }

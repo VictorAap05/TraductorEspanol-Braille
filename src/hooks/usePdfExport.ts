@@ -75,7 +75,7 @@ const COLOR_DOT_OFF = [210, 210, 210] as const;
 const COLOR_CHAR = [80, 80, 80] as const;
 
 /** Color de fondo general de la página. Equivale a `#dbedeb`. */
-const COLOR_FONDO = [219, 237, 235] as const;
+const COLOR_FONDO = [255, 255, 255] as const;
 
 /** Color secundario usado para etiquetas y pie de página. */
 const COLOR_PIE = [160, 160, 160] as const;
@@ -101,6 +101,7 @@ function dibujarCelda(
   x: number,
   y: number,
   matriz: boolean[],
+  espejado = false,
   caracter: string,
 ): void {
   // Fondo y borde del recuadro
@@ -120,6 +121,10 @@ function dibujarCelda(
     y + CELL_PAD + DOT_R + DOT_GAP * 2, // fila inferior
   ];
 
+  //Reordenamiento
+  const matrizFinal = espejado
+    ? [matriz[3], matriz[4], matriz[5], matriz[0], matriz[1], matriz[2]]
+    : matriz;
   // Mapeo índice → posición (col, fila)
   // 0→(0,0), 1→(0,1), 2→(0,2), 3→(1,0), 4→(1,1), 5→(1,2)
   const posiciones = [
@@ -132,7 +137,7 @@ function dibujarCelda(
   ];
 
   posiciones.forEach(([cx, cy], i) => {
-    const color = matriz[i] ? COLOR_DOT_ON : COLOR_DOT_OFF;
+    const color = matrizFinal[i] ? COLOR_DOT_ON : COLOR_DOT_OFF;
     pdf.setFillColor(color[0], color[1], color[2]);
     pdf.circle(cx, cy, DOT_R, "F");
   });
@@ -181,7 +186,11 @@ export const usePdfExport = () => {
    * @param traduccion    - Arreglo de nodos braille producido por {@link BrailleTranslatorService}.
    */
   const exportarPdf = useCallback(
-    (textoOriginal: string, traduccion: TraduccionBraille[]): void => {
+    (
+      textoOriginal: string,
+      traduccion: TraduccionBraille[],
+      espejado = false,
+    ): void => {
       if (!traduccion.length) return;
       setExportando(true);
 
@@ -202,9 +211,7 @@ export const usePdfExport = () => {
         pdf.setFontSize(20);
         pdf.setTextColor(...COLOR_TITULO);
         pdf.setFont("helvetica", "bold");
-        pdf.text("Señalética Braille", PAGE_W / 2, cursorY, {
-          align: "center",
-        });
+        pdf.text(espejado ? "Señalética Braille - Para Imprimir" : "Señalética Braille", PAGE_W / 2, cursorY, { align: "center" });
         cursorY += 7;
 
         // Línea separadora bajo el título
@@ -245,28 +252,34 @@ export const usePdfExport = () => {
           (USABLE_W + CELL_GAP) / (CELL_W + CELL_GAP),
         );
 
-        let x = MARGIN;
+        // Caso para Impresión
+        
+        const xInicial = espejado ? PAGE_W - MARGIN - CELL_W : MARGIN;
+
+        let x = xInicial;
         let filaStart = cursorY;
 
         traduccion.forEach((nodo, idx) => {
           // Salto de fila al superar el ancho útil
           if (idx > 0 && idx % celdasPorFila === 0) {
             filaStart += ROW_H + 2;
-            x = MARGIN;
+            x = espejado ? PAGE_W - MARGIN - CELL_W : MARGIN;
 
-            // Salto de página al superar el alto útil
             if (filaStart + ROW_H > PAGE_H - MARGIN - 10) {
               pdf.addPage();
               pdf.setFillColor(...COLOR_FONDO);
               pdf.rect(0, 0, PAGE_W, PAGE_H, "F");
               filaStart = MARGIN;
-              x = MARGIN;
             }
           }
 
-          const caracter = nodo.esPrefijo ? "PREF" : nodo.caracterOriginal;
-          dibujarCelda(pdf, x, filaStart, nodo.matriz, caracter);
-          x += CELL_W + CELL_GAP;
+          const caracter = nodo.esPrefijo
+            ? nodo.caracterOriginal === "PREFIJO_MAY"
+              ? "MAYUS"
+              : "NUM"
+            : nodo.caracterOriginal;
+          dibujarCelda(pdf, x, filaStart, nodo.matriz, espejado, caracter);
+          x += espejado ? -(CELL_W + CELL_GAP) : CELL_W + CELL_GAP;
         });
 
         // ── Pie de página ────────────────────────────────────────────────────
@@ -285,7 +298,7 @@ export const usePdfExport = () => {
         }
 
         // ── Descarga ─────────────────────────────────────────────────────────
-        const nombre = `braille_${textoOriginal.slice(0, 20).replace(/\s+/g, "_") || "señaletica"}.pdf`;
+        const nombre = `braille_${new Date().toLocaleString('es-ES', { hour12: false })}.pdf`;
         pdf.save(nombre);
       } finally {
         setExportando(false);
@@ -294,5 +307,11 @@ export const usePdfExport = () => {
     [],
   );
 
-  return { exportarPdf, exportando };
+  const exportarPdfEspejado = useCallback(
+    (textoOriginal: string, traduccion: TraduccionBraille[]) =>
+      exportarPdf(textoOriginal, traduccion, true),
+    [exportarPdf],
+  );
+
+  return { exportarPdf, exportarPdfEspejado, exportando };
 };
