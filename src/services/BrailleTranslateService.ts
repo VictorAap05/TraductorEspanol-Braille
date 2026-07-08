@@ -16,16 +16,24 @@ export interface TraduccionBraille {
 }
 
 /**
- * Serializa una BrailleMatrix a una clave de string para búsqueda inversa.
- * Ej: [true,false,true,false,false,false] - "101000"
+ * Serializa una {@link BrailleMatrix} a una clave de tipo string para su uso
+ * como identificador único en búsquedas inversas (mapas Braille → carácter).
+ *
+ * @param matriz - Matriz de 6 booleanos a serializar.
+ * @returns Cadena de 6 dígitos binarios, ej. `[true,false,true,false,false,false]` → `"101000"`.
  */
 const matrizAClave = (matriz: BrailleMatrix): string =>
   matriz.map(b => (b ? "1" : "0")).join("");
 
 /**
- * Mapa inverso: clave de puntos - carácter español.
- * Se construye en tiempo de módulo a partir de BrailleDictionary,
- * excluyendo prefijos y dígitos (para evitar ambigüedad con letras).
+ * Construye el mapa inverso clave-de-puntos → carácter en español a partir
+ * del {@link BrailleDictionary}.
+ *
+ * Excluye los prefijos de control (`PREFIJO_NUMERO`, `PREFIJO_MAYUSCULA`) y
+ * los dígitos, ya que estos últimos comparten celda con las letras de la
+ * Serie 1 y se resuelven aparte según el modo numérico (ver {@link matrizAChar}).
+ *
+ * @returns Un `Map` que asocia cada clave de 6 dígitos binarios con su carácter en español.
  */
 const buildInverseMap = (): Map<string, string> => {
   const map = new Map<string, string>();
@@ -50,8 +58,16 @@ const buildInverseMap = (): Map<string, string> => {
 const INVERSE_MAP = buildInverseMap();
 
 /**
- * Convierte una BrailleMatrix a su carácter español equivalente.
- * Devuelve null si no hay coincidencia.
+ * Convierte una {@link BrailleMatrix} a su carácter español equivalente,
+ * o a un identificador de prefijo (`"PREFIJO_NUMERO"` / `"PREFIJO_MAYUSCULA"`).
+ *
+ * Resuelve primero la celda vacía (espacio) y los prefijos de control;
+ * si `enModoNumero` está activo, intenta resolver la matriz como dígito
+ * antes de recurrir al {@link INVERSE_MAP} de letras y signos.
+ *
+ * @param matriz - Matriz Braille a convertir.
+ * @param enModoNumero - Indica si la celda debe interpretarse como dígito (modo numérico activo).
+ * @returns El carácter equivalente, el identificador del prefijo detectado, o `null` si no hay coincidencia.
  */
 const matrizAChar = (
   matriz: BrailleMatrix,
@@ -88,9 +104,35 @@ const matrizAChar = (
   return INVERSE_MAP.get(clave) ?? null;
 };
 
+/**
+ * Servicio estático encargado de la traducción bidireccional entre texto en
+ * español y el sistema Braille Español, apoyándose en {@link BrailleDictionary}
+ * para la equivalencia de cada carácter.
+ *
+ * No mantiene estado propio entre llamadas: toda la información necesaria
+ * (texto o arreglo de matrices) se recibe como argumento en cada método.
+ *
+ * @remarks
+ * Implementa las reglas del sistema Braille Español para:
+ * - Prefijo de mayúscula (`PREFIJO_MAYUSCULA`): simple para una letra,
+ *   doble para una palabra completa en mayúsculas.
+ * - Prefijo de número (`PREFIJO_NUMERO`): activa el modo numérico hasta
+ *   que aparece un espacio u otro carácter que no sea dígito, `.` o `,`.
+ */
 export class BrailleTranslatorService {
   /**
-   * Español - Braille
+   * Traduce una cadena de texto en español a su representación Braille.
+   *
+   * Recorre el texto carácter por carácter, insertando automáticamente los
+   * prefijos de número y mayúscula donde corresponda según las reglas del
+   * sistema Braille Español (mayúscula simple, mayúscula doble para palabras
+   * completas en mayúsculas, y modo numérico persistente hasta el siguiente
+   * espacio o carácter no numérico).
+   *
+   * @param texto - Texto en español a traducir.
+   * @returns Un arreglo de {@link TraduccionBraille}, uno por cada carácter
+   * (incluyendo los nodos de prefijo insertados). Los caracteres sin
+   * representación en el {@link BrailleDictionary} se marcan con `noSoportado: true`.
    */
   static traducirTexto(texto: string): TraduccionBraille[] {
     const resultado: TraduccionBraille[] = [];
@@ -188,9 +230,20 @@ export class BrailleTranslatorService {
   }
 
   /**
-   * Braille - Español
-   * Recibe un array de BrailleMatrix (las celdas ingresadas por el usuario)
-   * y devuelve el texto en español.
+   * Traduce un arreglo de celdas Braille (matrices de 6 puntos) a texto en español.
+   *
+   * Interpreta secuencialmente cada matriz, gestionando el estado de modo
+   * numérico y de mayúsculas activados por los prefijos correspondientes:
+   * - Un único `PREFIJO_MAYUSCULA` capitaliza solo el siguiente carácter.
+   * - Dos `PREFIJO_MAYUSCULA` consecutivos capitalizan toda la palabra hasta
+   *   el siguiente espacio, prefijo o fin de la secuencia.
+   * - `PREFIJO_NUMERO` activa el modo numérico, que persiste mientras se
+   *   reciban dígitos o los signos `.`/`,`, y se desactiva con cualquier
+   *   otro carácter o espacio.
+   *
+   * @param matrices - Arreglo de {@link BrailleMatrix} ingresadas por el usuario (una por celda).
+   * @returns El texto en español resultante. Las celdas sin equivalencia en
+   * el diccionario se representan como `"?"`.
    */
   static traducirBrailleAEspanol(matrices: BrailleMatrix[]): string {
     let resultado = "";
@@ -254,6 +307,17 @@ export class BrailleTranslatorService {
     return resultado;
   }
 
+  /**
+   * Construye un nodo {@link TraduccionBraille} a partir de un carácter y su matriz.
+   *
+   * Función auxiliar interna usada por {@link traducirTexto} para evitar
+   * repetir la creación del objeto de resultado en cada rama del recorrido.
+   *
+   * @param char - Carácter original (o identificador de prefijo, ej. `"PREFIJO_MAY"`).
+   * @param matriz - Matriz Braille correspondiente al carácter.
+   * @param esPrefijo - `true` si el nodo representa un prefijo de control (mayúscula o número). Por defecto `false`.
+   * @returns El nodo {@link TraduccionBraille} construido.
+   */
   private static crearNodo(
     char: string,
     matriz: BrailleMatrix,
