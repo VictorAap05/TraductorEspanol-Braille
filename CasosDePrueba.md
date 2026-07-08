@@ -90,12 +90,25 @@ Tras aplicar la primera corrección visual, se procedió a realizar una nueva ro
 
 
 **Resultado de la prueba:** No cumple. Se detectaron dos fallos principales:
-1. El número cero (`0`) no aparecía correctamente traducido.
+1. En las númeraciones la (`,` y `.`) volvian a generar el prefijo de número.
 2. Cuando una palabra completa estaba en mayúsculas (ej. `FIS-EPN`), no se aplicaba correctamente el doble prefijo de mayúscula al inicio.
 
 ### Análisis y Solución
 
-* **Corrección del número cero:** El error ocurría porque el sistema estaba utilizando la codificación del sistema anglosajón para el cero (`[2, 4, 5]`). Se corrigió actualizando la matriz al estándar del Braille español: `'0': crearCuadratin([1, 4, 5, 6])`.
+* **Corrección de la coma y punto:** Se soluciono con el siguiente bloque de código:
+
+```javascript
+// ── Signos decimales o miles (. ,) dentro de secuencia numérica (no reinician el modo número) ──
+      if (enModoNumero && (char === "." || char === ",")) {
+        const matrizPunto = BrailleDictionary[char];
+        if (matrizPunto) {
+          resultado.push(this.crearNodo(char, matrizPunto));
+        }
+        i++;
+        continue;
+      }
+```
+
 * **Corrección de palabras en mayúsculas:** El sistema anterior detectaba las mayúsculas carácter por carácter. Se solucionó implementando una expresión regular (regex) de detección de límites de palabra (de `[A-Za-z...]` a `[A-Za-z...-]`), incluyendo el guion para evitar que se rompa la secuencia al encontrarlo en palabras compuestas o siglas.
 ))} //
 
@@ -109,8 +122,8 @@ Una vez aplicadas las correcciones sobre la traducción del cero y los prefijos 
 <img width="623" height="418" alt="image" src="https://github.com/user-attachments/assets/6c257787-2bb4-4feb-be79-0d3c3db4fc0c" />
 
 * `nov 2025`
-⠝ ⠕ ⠧ ⠀ ⠼ ⠃ ⠹ ⠃ ⠑
-<img width="599" height="370" alt="image" src="https://github.com/user-attachments/assets/f7783b8d-5545-4ef6-ac41-df8730373ad4" />
+⠝ ⠕ ⠧  ⠼ ⠃ ⠚ ⠃ ⠑
+<img width="967" height="653" alt="WhatsApp Image 2026-05-29 at 8 56 37 AM" src="https://github.com/user-attachments/assets/4cd0817f-be30-4f3e-83d8-534ea39d44f0" />
 
 * `Niño`
 ⠨ ⠝ ⠊ ⠻ ⠕
@@ -121,24 +134,26 @@ Una vez aplicadas las correcciones sobre la traducción del cero y los prefijos 
 <img width="605" height="373" alt="image" src="https://github.com/user-attachments/assets/fc6eee22-ffeb-4ee6-b4fc-9dcd0828a102" />
 
 * `20,15`
-⠼ ⠃ ⠹ ⠂ ⠼ ⠁ ⠑
-<img width="616" height="462" alt="image" src="https://github.com/user-attachments/assets/c1c48325-af1b-4c9c-85ad-1c1298ff11d7" />
+⠼ ⠃ ⠚ ⠂ ⠁ ⠑
+<img width="632" height="615" alt="WhatsApp Image 2026-05-29 at 8 57 40 AM" src="https://github.com/user-attachments/assets/ec882423-8fdb-4dc6-87f3-e29f6f57f1a2" />
+
 
 * `46.37`
-⠼ ⠙ ⠋ ⠄ ⠼ ⠉ ⠛
-<img width="626" height="469" alt="image" src="https://github.com/user-attachments/assets/390a79d0-6ed3-4832-8da2-94390509c5aa" />
+⠼ ⠙ ⠋ ⠄ ⠉ ⠛
+<img width="622" height="596" alt="WhatsApp Image 2026-05-29 at 8 58 25 AM" src="https://github.com/user-attachments/assets/f981985b-e77c-47c7-8818-82906085289b" />
 
 * `25-11-2025`
-⠼ ⠃ ⠑ ⠤ ⠼ ⠁ ⠁ ⠤ ⠼ ⠃ ⠹ ⠃ ⠑
-<img width="628" height="427" alt="image" src="https://github.com/user-attachments/assets/b52c8a74-22a7-4f3c-9a25-33df9ea3200c" />
+⠼ ⠃ ⠑ ⠤ ⠼ ⠁ ⠁ ⠤ ⠼ ⠃ ⠚ ⠃ ⠑
+<img width="934" height="628" alt="WhatsApp Image 2026-05-29 at 8 59 14 AM" src="https://github.com/user-attachments/assets/c0e9c5e1-3592-4a16-b4b2-5ae8ef431fed" />
 
 * `sandía`
 ⠎ ⠁ ⠝ ⠙ ⠌ ⠁
 <img width="629" height="541" alt="image" src="https://github.com/user-attachments/assets/c6ecbe7a-261f-4213-81ee-e5d5cc2fcead" />
 
 * `26-11-2025`
-⠼ ⠃ ⠋ ⠤ ⠼ ⠁ ⠁ ⠤ ⠼ ⠃ ⠹ ⠃ ⠑
-<img width="636" height="429" alt="image" src="https://github.com/user-attachments/assets/964565b4-d4ee-4e94-b4e3-88321c681be5" />
+⠼ ⠃ ⠋ ⠤ ⠼ ⠁ ⠁ ⠤ ⠼ ⠃ ⠚ ⠃ ⠑
+<img width="910" height="641" alt="WhatsApp Image 2026-05-29 at 8 59 35 AM" src="https://github.com/user-attachments/assets/d3ea2042-521e-4352-a77b-7604d36cae93" />
+
 
 
 **Resultado de la prueba:** Sin problemas. Todas las validaciones de números, caracteres especiales y prefijos pasaron exitosamente.
