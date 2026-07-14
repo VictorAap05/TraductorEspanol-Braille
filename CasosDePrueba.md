@@ -164,6 +164,15 @@ Con la incorporación de la traducción bidireccional (Braille → Español) y l
 
 ### Traducción Braille → Español
 
+Caso de prueba anteior, con la nueva versión, traducido de braille a español y viceversa.
+* `sandía`
+⠎ ⠁ ⠝ ⠙ ⠌ ⠁
+
+<img width="1285" height="861" alt="Captura de pantalla 2026-07-14 140757" src="https://github.com/user-attachments/assets/253b63ff-2961-4645-843c-378e5279bd69" />
+<img width="1262" height="517" alt="Captura de pantalla 2026-07-14 140644" src="https://github.com/user-attachments/assets/7ed57654-0dac-4e50-ae1d-b7382e3af695" />
+
+
+
 **Caso ingresado:** Cambio de dirección con el botón de intercambio, e ingreso de "donde es la fiesta" mediante el teclado Braille en pantalla.
 
 <img width="300" alt="Botón para Intercambiar de Traducción" src="screenshot/Boton%20para%20Intercambiar%20de%20Traducción.jpg" />
