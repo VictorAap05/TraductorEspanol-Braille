@@ -1,26 +1,28 @@
-# Manual de Usuario - Traductor Español a Braille
+# Manual de Usuario - Traductor Español ↔ Braille
 
 ## Tabla de Contenidos
 1. [Introducción](#introducción)
 2. [Interfaz de Usuario](#interfaz-de-usuario)
 3. [Cómo Usar el Traductor](#cómo-usar-el-traductor)
 4. [Características Principales](#características-principales)
-5. [Reglas del Sistema Braille Español](#reglas-del-sistema-braille-español)
-6. [Ejemplos de Uso](#ejemplos-de-uso)
-7. [Exportar a PDF](#exportar-a-pdf)
-8. [Preguntas Frecuentes](#preguntas-frecuentes)
-9. [Resolución de Problemas](#resolución-de-problemas)
+5. [Traducción Bidireccional (Braille → Español)](#traducción-bidireccional-braille--español)
+6. [Reglas del Sistema Braille Español](#reglas-del-sistema-braille-español)
+7. [Ejemplos de Uso](#ejemplos-de-uso)
+8. [Exportar a PDF](#exportar-a-pdf)
+9. [Preguntas Frecuentes](#preguntas-frecuentes)
+10. [Resolución de Problemas](#resolución-de-problemas)
 
 ---
 
 ## Introducción
 
-Traductor Español - Braille es una aplicación web interactiva que convierte texto en español a su equivalente en el sistema de lectoescritura Braille. 
+Traductor Español ↔ Braille es una aplicación web interactiva que convierte texto en español a su equivalente en el sistema de lectoescritura Braille, y también en sentido inverso.
 
 Este sistema permite:
 - Traducir cualquier texto en español a Braille en tiempo real
+- Traducir en sentido inverso, de Braille a español, mediante un teclado Braille en pantalla
 - Visualizar las celdas Braille de forma clara y detallada
-- Exportar la traducción a un archivo PDF
+- Exportar la traducción a un archivo PDF, en formato normal o espejado para impresión en relieve
 - Comprender las reglas de escritura Braille española
 
 ### ¿Qué es el Braille?
@@ -39,6 +41,8 @@ Los puntos pueden estar en relieve (elevados) o hundidos para formar diferentes 
 ---
 
 ## Interfaz de Usuario
+
+> **Nota:** Las capturas e interfaz descritas en esta sección corresponden a la versión actual en producción (traducción Español → Braille). La interfaz bidireccional con pestañas de idioma y doble exportación (ver [Traducción Bidireccional](#traducción-bidireccional-braille--español)) está en desarrollo y sus capturas se actualizarán aquí cuando se fusione a producción.
 
 La aplicación posee una interfaz clara y funcional diseñada para facilitar la traducción de texto al sistema Braille.
 
@@ -138,6 +142,28 @@ El sistema aplica automáticamente las reglas del Braille español:
 
 
 - Prefijos: Se etiquetan como "PREF" para identificación
+
+---
+
+## Traducción Bidireccional (Braille → Español)
+
+Además de traducir de español a Braille, la aplicación permite el proceso inverso: componer un mensaje en Braille y obtener su equivalente en español.
+
+### Cambiar de Dirección
+
+En la cabecera del traductor hay un botón de intercambio (↔) entre las dos pestañas de idioma ("Español" y "Braille"). Al presionarlo:
+- El panel izquierdo pasa a mostrar las celdas Braille que el usuario va ingresando.
+- El panel derecho muestra el texto en español resultante, actualizado en tiempo real.
+- El contenido de ambos modos se reinicia al cambiar de dirección, para evitar mezclar datos de una traducción con otra.
+
+### Teclado Braille en Pantalla
+
+En modo "Braille → Español" aparece un teclado Braille interactivo debajo de la tarjeta del traductor, con teclas para:
+- Letras, vocales acentuadas y la letra ñ.
+- Números y signos de puntuación.
+- Espacio, borrar el último carácter ingresado y limpiar todo el contenido.
+
+Cada tecla presionada agrega una celda Braille al panel izquierdo y su carácter correspondiente al texto en español del panel derecho.
 
 ---
 
@@ -328,6 +354,17 @@ El navegador descargará automáticamente un archivo PDF con:
 - Texto original legible debajo de cada celda
 - Optimizado para impresión
 - Descargable directamente desde el navegador
+
+### Exportación en Modo Espejado (Relieve)
+
+Junto al botón de exportación normal hay un segundo botón, "Exportar para relieve (espejado)", pensado para quienes van a perforar la hoja manualmente (o con punzón) para producir Braille táctil real.
+
+Al usarlo, el PDF generado:
+- Invierte el orden horizontal de las celdas (de derecha a izquierda en vez de izquierda a derecha).
+- Intercambia, dentro de cada celda, la columna izquierda de puntos (1-2-3) con la derecha (4-5-6).
+- Titula el documento como "Señalética Braille - Para Imprimir" para diferenciarlo del PDF normal.
+
+Esto permite perforar el papel desde el reverso de la hoja: al voltearla, los puntos quedan en relieve en la posición correcta para su lectura táctil.
 
 ---
 

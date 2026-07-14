@@ -1,3 +1,11 @@
+# Diseño Arquitectónico
+
+## 1. Introducción y Alcance
+
+**Objetivo:** Describir la arquitectura de alto nivel del sistema Traductor Español-Braille, estableciendo las responsabilidades de cada capa del cliente y los principios de diseño aplicados durante su desarrollo.
+
+**Alcance:** El diseño cubre la totalidad de la aplicación cliente: la traducción de texto en español a Braille y su inversa (Braille a español mediante teclado en pantalla), la representación visual del cuadratín Braille, y la generación de señalética exportable en PDF, incluyendo el modo espejado para impresión en relieve. El sistema opera íntegramente en el navegador, sin backend ni persistencia de datos.
+
 ## 2. Diseño Arquitectónico de Alto Nivel, Arquitectura basada en componentes
 
 El sistema implementa una arquitectura basada en capas desacopladas dentro del entorno del cliente, garantizando el cumplimiento del Principio de Responsabilidad Única y facilitando el mantenimiento y testeo modular del software.
