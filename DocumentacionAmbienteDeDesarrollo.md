@@ -35,3 +35,15 @@ Para garantizar la integridad del software, cada integrante debe seguir obligato
    ```bash
    git checkout main
    git pull origin main
+   ```
+2. **Creación de Rama:** Se crea una rama `feature/` a partir de `main` para aislar el trabajo:
+   ```bash
+   git checkout -b feature/nombre-descriptivo
+   ```
+3. **Desarrollo y Commits:** Se implementan los cambios realizando commits atómicos y descriptivos que documenten el avance.
+4. **Publicación de la Rama:** Al finalizar el trabajo, se sube la rama al repositorio remoto:
+   ```bash
+   git push origin feature/nombre-descriptivo
+   ```
+5. **Pull Request y Revisión:** Se abre un Pull Request hacia `main`. El código debe ser revisado y aprobado por al menos un integrante del equipo antes de fusionarse.
+6. **Integración:** Una vez aprobado, se fusiona la rama a `main` y se elimina la rama de característica para mantener el repositorio limpio.

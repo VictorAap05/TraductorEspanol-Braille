@@ -37,13 +37,14 @@ Se identificó un problema con el orden de lectura visual de los índices de la 
  * [1]=pto2  [4]=pto5
  * [2]=pto3  [5]=pto6
  */
-const ORDEN_VISUAL = [0, 3, 1, 4, 2, 5]; // [cite: 48, 49, 50, 51, 52, 55]
+const ORDEN_VISUAL = [0, 3, 1, 4, 2, 5];
 
-{ORDEN_VISUAL.map((matrizIndex, posicion) => ( // 
+{ORDEN_VISUAL.map((matrizIndex, posicion) => (
   <div
-    key={posicion} //
-    className={`braille-dot ${matriz[matrizIndex] ? [cite_start]'active' : 'inactive'}`} // 
- /> //
+    key={posicion}
+    className={`braille-dot ${matriz[matrizIndex] ? 'active' : 'inactive'}`}
+  />
+))}
 ```
 
 ## 2. Segunda Iteración de Pruebas
@@ -110,7 +111,6 @@ Tras aplicar la primera corrección visual, se procedió a realizar una nueva ro
 ```
 
 * **Corrección de palabras en mayúsculas:** El sistema anterior detectaba las mayúsculas carácter por carácter. Se solucionó implementando una expresión regular (regex) de detección de límites de palabra (de `[A-Za-z...]` a `[A-Za-z...-]`), incluyendo el guion para evitar que se rompa la secuencia al encontrarlo en palabras compuestas o siglas.
-))} //
 
 ## 3. Tercera Iteración de Pruebas
 
