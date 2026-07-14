@@ -18,4 +18,5 @@ El sistema implementa una arquitectura basada en capas desacopladas dentro del e
     * BrailleTranslatorService: Contiene las reglas algorítmicas para procesar las series primitivas, secundarias y terceras, así como las banderas de control para la inserción de prefijos numéricos y de mayúsculas.
     * BrailleDictionary: Estructura de datos inmutable que almacena los mapas de equivalencias estáticas del sistema Braille Español.
  
-<img width="5330" height="2903" alt="Diagrama_Componentes_Traductor" src="https://github.com/user-attachments/assets/8f58e9c0-018e-4c35-93e3-b6479bac2f6a" />
+<img width="1260" height="718" alt="image" src="https://github.com/user-attachments/assets/e30fe01b-b645-4537-b110-0c82ec602ae9" />
+
