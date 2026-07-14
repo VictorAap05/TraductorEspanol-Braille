@@ -46,4 +46,12 @@ Notas de desarrollo
 - `BrailleTranslateService` y `BrailleDictionary` centralizan las reglas y excepciones.
 - `usePdfExport` usa `jspdf` para generar y descargar el PDF desde el navegador; `exportarPdfEspejado` reutiliza la misma lógica invirtiendo el orden de las celdas y las columnas de puntos de cada una.
 
+Documentación
+- [Historias de Usuario](HistoriasDeUsuario.md) — requisitos y criterios de aceptación.
+- [Diseño Arquitectónico](DiseñoArquitectonico.md) — capas y componentes del sistema.
+- [Casos de Prueba](CasosDePrueba.md) — iteraciones de pruebas manuales realizadas.
+- [Análisis de Cambios](AnalisisDeCambios.md) — comparación de requisitos y pruebas respecto a la primera iteración, y pendientes.
+- [Manual de Usuario](MANUAL_USUARIO.md) — guía de uso de la aplicación.
+- [Ambiente de Desarrollo](DocumentacionAmbienteDeDesarrollo.md) — configuración del entorno de desarrollo.
+
 ---
