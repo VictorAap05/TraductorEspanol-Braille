@@ -1,4 +1,4 @@
-# Casos de Prueba: Traductor Español - Braille 
+# Casos de Prueba: Traductor Español ↔ Braille
 
 **Equipo 2**
 
@@ -157,4 +157,26 @@ Una vez aplicadas las correcciones sobre la traducción del cero y los prefijos 
 
 
 **Resultado de la prueba:** Sin problemas. Todas las validaciones de números, caracteres especiales y prefijos pasaron exitosamente.
+
+## 4. Cuarta Iteración de Pruebas
+
+Con la incorporación de la traducción bidireccional (Braille → Español) y la exportación en modo espejado para impresión en relieve (HU06 y HU07), se realizaron pruebas manuales sobre ambas funcionalidades nuevas.
+
+### Traducción Braille → Español
+
+**Caso ingresado:** Cambio de dirección con el botón de intercambio, e ingreso de "donde es la fiesta" mediante el teclado Braille en pantalla.
+
+<img width="300" alt="Botón para Intercambiar de Traducción" src="screenshot/Boton%20para%20Intercambiar%20de%20Traducción.jpg" />
+<img width="400" alt="Teclado en Pantalla" src="screenshot/Teclado%20en%20Pantalla.jpg" />
+<img width="500" alt="Ejemplo Braille a Español" src="screenshot/Ejemplo%20Braille%20a%20Español.jpg" />
+
+**Resultado de la prueba:** Sin problemas. El panel izquierdo acumuló correctamente las celdas Braille ingresadas por teclado, y el panel derecho mostró el texto en español equivalente ("donde es la fiesta") en tiempo real.
+
+### Exportación en Modo Espejado (Relieve)
+
+**Caso ingresado:** Traducción de "Traducción" a Braille, exportada con el botón "Exportar para relieve (espejado)".
+
+<img width="500" alt="Impresión en Espejo" src="screenshot/Impresión%20en%20Espejo.jpg" />
+
+**Resultado de la prueba:** Sin problemas. El PDF generado invirtió correctamente el orden horizontal de las celdas y las columnas de puntos de cada una, y se tituló "Señalética Braille - Para Imprimir" para diferenciarlo del PDF normal.
 

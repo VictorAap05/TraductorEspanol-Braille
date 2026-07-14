@@ -42,37 +42,37 @@ Los puntos pueden estar en relieve (elevados) o hundidos para formar diferentes 
 
 ## Interfaz de Usuario
 
-> **Nota:** Las capturas e interfaz descritas en esta sección corresponden a la versión actual en producción (traducción Español → Braille). La interfaz bidireccional con pestañas de idioma y doble exportación (ver [Traducción Bidireccional](#traducción-bidireccional-braille--español)) está en desarrollo y sus capturas se actualizarán aquí cuando se fusione a producción.
-
-La aplicación posee una interfaz clara y funcional diseñada para facilitar la traducción de texto al sistema Braille.
+La aplicación posee una interfaz clara y funcional diseñada para facilitar la traducción de texto al sistema Braille, en ambas direcciones.
 
 ![Interfaz Principal Completa](screenshot/Interfaz%20Principal%20Completa.jpg)
 
 ### Componentes Principales
 
 1. Título Principal
-   - "Traductor Español - Braille"
+   - "Traductor Español ↔ Braille"
    - Se muestra en la parte superior de la interfaz
 
-2. Sección de Entrada
-   - Un cuadro de texto extenso donde se ingresa el contenido a traducir
-   - Incluye indicación de tipos de contenido soportados
-   - Acepta cualquier texto en español
+2. Cabecera de Pestañas
+   - Dos pestañas, "Español" y "Braille", indican cuál idioma es la entrada y cuál la salida
+   - Un botón de intercambio (↔) entre ambas invierte la dirección de traducción
 
-3. Área de Visualización
-   - Muestra las celdas Braille traducidas
+   ![Botón para Intercambiar de Traducción](screenshot/Boton%20para%20Intercambiar%20de%20Traducción.jpg)
+
+3. Panel Izquierdo (Entrada)
+   - En modo Español → Braille: un cuadro de texto donde se ingresa el contenido a traducir
+   - En modo Braille → Español: las celdas Braille acumuladas desde el teclado en pantalla
+
+4. Panel Derecho (Salida)
+   - Muestra las celdas Braille traducidas o el texto en español resultante, según la dirección activa
    - Se actualiza en tiempo real mientras se escribe
-   - Cada celda contiene 6 puntos que se muestran en negro (activos) o gris (inactivos)
+   - Cada celda contiene 6 puntos que se muestran en teal/cian (activos) o gris oscuro (inactivos), sobre una tarjeta de fondo oscuro
    - Debajo de cada celda aparece el carácter original en tinta para referencia
 
-4. Botón de Exportación
-   - "Exportar traducción a PDF"
-   - Aparece únicamente cuando hay contenido traducido
-   - Genera un documento PDF descargable
+5. Botones de Exportación
+   - "Exportar traducción a PDF" y "Exportar para relieve (espejado)"
+   - Aparecen únicamente cuando hay contenido traducido en modo Español → Braille
 
-5. Fondo Animado
-   - Elementos visuales decorativos que mejoran la experiencia del usuario
-   - Proporciona una interfaz atractiva sin interferir con la funcionalidad
+   ![Botones para Exportación](screenshot/Botones%20para%20Exportación.jpg)
 
 ---
 
@@ -97,13 +97,13 @@ La traducción a Braille aparecerá inmediatamente debajo, mostrando:
 - El carácter original debajo de cada celda
 - Los prefijos especiales para números y mayúsculas
 
-![Traducción en Tiempo Real](screenshot/Traducción%20en%20Tiempo%20Real.jpg)
+![Traducción en Tiempo Real](screenshot/Ejemplo%202.jpg)
 
 ### Paso 3: Interprete las Celdas
 
-- Puntos negros: Puntos que están en relieve (activos)
-- Puntos grises: Puntos que no están en relieve (inactivos)
-- Si una celda está completamente gris: espacio en blanco
+- Puntos teal/cian: Puntos que están en relieve (activos)
+- Puntos gris oscuro: Puntos que no están en relieve (inactivos)
+- Si una celda no tiene puntos activos: espacio en blanco
 
 ![Celdas Braille Detalladas](screenshot/Celdas%20Braille%20Detalladas.jpg)
 
@@ -141,7 +141,7 @@ El sistema aplica automáticamente las reglas del Braille español:
 ### 4. Indicadores Visuales
 
 
-- Prefijos: Se etiquetan como "PREF" para identificación
+- Prefijos: Se etiquetan como "MAYUS" (prefijo de mayúscula) o "NUM" (prefijo de número) debajo de la celda, para identificación
 
 ---
 
@@ -156,6 +156,8 @@ En la cabecera del traductor hay un botón de intercambio (↔) entre las dos pe
 - El panel derecho muestra el texto en español resultante, actualizado en tiempo real.
 - El contenido de ambos modos se reinicia al cambiar de dirección, para evitar mezclar datos de una traducción con otra.
 
+![Braille a Español](screenshot/Braille%20a%20Español.jpg)
+
 ### Teclado Braille en Pantalla
 
 En modo "Braille → Español" aparece un teclado Braille interactivo debajo de la tarjeta del traductor, con teclas para:
@@ -164,6 +166,14 @@ En modo "Braille → Español" aparece un teclado Braille interactivo debajo de 
 - Espacio, borrar el último carácter ingresado y limpiar todo el contenido.
 
 Cada tecla presionada agrega una celda Braille al panel izquierdo y su carácter correspondiente al texto en español del panel derecho.
+
+![Teclado en Pantalla](screenshot/Teclado%20en%20Pantalla.jpg)
+
+### Ejemplo
+
+Al presionar en el teclado las letras correspondientes a "donde es la fiesta", el panel izquierdo acumula las celdas Braille ingresadas y el panel derecho muestra el texto en español resultante en tiempo real:
+
+![Ejemplo Braille a Español](screenshot/Ejemplo%20Braille%20a%20Español.jpg)
 
 ---
 
@@ -236,7 +246,7 @@ Hola
 
 Salida Braille:
 ```
-[PREF] [H] [o] [l] [a]
+[MAYUS] [H] [o] [l] [a]
 ```
 
 El carácter "H" se encuentra en mayúscula, por lo que aparece el prefijo de mayúscula.
@@ -253,7 +263,7 @@ El año es 2026
 
 Salida Braille:
 ```
-[E] [l] [espacio] [a] [ñ] [o] [espacio] [e] [s] [espacio] [PREF] [2] [0] [2] [6]
+[MAYUS] [E] [l] [espacio] [a] [ñ] [o] [espacio] [e] [s] [espacio] [NUM] [2] [0] [2] [6]
 ```
 
 Los números reciben un prefijo al inicio de la secuencia numérica.
@@ -266,15 +276,15 @@ Los números reciben un prefijo al inicio de la secuencia numérica.
 
 Entrada:
 ```
-BUENOS DIAS
+BUENOS DÍAS
 ```
 
 Salida Braille:
 ```
-[DOBLE PREF] [B] [U] [E] [N] [O] [S] [espacio] [D] [I] [A] [S]
+[MAYUS] [MAYUS] [B] [U] [E] [N] [O] [S] [espacio] [MAYUS] [MAYUS] [D] [Í] [A] [S]
 ```
 
-Únicamente el primer prefijo es doble; los caracteres restantes no llevan prefijo adicional.
+Cada palabra completamente en mayúsculas recibe su propio doble prefijo al inicio; el resto de sus caracteres no llevan prefijo adicional.
 
 ![Palabra Completamente en Mayúsculas](screenshot/Palabra%20Completamente%20en%20Mayúsculas.jpg)
 
@@ -289,7 +299,7 @@ Entrada:
 
 Salida Braille:
 ```
-[!] [PREF] [H] [o] [l] [a] [!]
+[!] [MAYUS] [H] [o] [l] [a] [!]
 ```
 
 Los signos de puntuación se colocan en sus posiciones correspondientes.
@@ -306,7 +316,7 @@ Mañana será
 
 Salida Braille:
 ```
-[PREF] [M] [a] [ñ] [a] [n] [a] [espacio] [s] [e] [r] [á]
+[MAYUS] [M] [a] [ñ] [a] [n] [a] [espacio] [s] [e] [r] [á]
 ```
 
 El sistema maneja correctamente todas las vocales acentuadas y la letra ñ.
@@ -323,12 +333,13 @@ Ingrese el texto que desea traducir en el área de entrada.
 
 ### Paso 2: Haga clic en el Botón de Exportación
 
-Cuando haya contenido traducido, verá un botón que dice:
+Cuando haya contenido traducido, verán dos botones:
 ```
 "Exportar traducción a PDF"
+"Exportar para relieve (espejado)"
 ```
 
-Haga clic en él.
+Haga clic en "Exportar traducción a PDF" para el formato normal.
 
 ![Botón de Exportación Visible](screenshot/Botón%20de%20Exportación%20Visible.jpg)
 
@@ -336,7 +347,7 @@ Haga clic en él.
 
 El navegador descargará automáticamente un archivo PDF con:
 
-- Título: "Traductor Español - Braille"
+- Título: "Señalética Braille"
 - Texto original: El texto ingresado
 - Celdas Braille: Todas las celdas traducidas con:
   - Los 6 puntos de cada celda (puntos negros = activos)
@@ -365,6 +376,8 @@ Al usarlo, el PDF generado:
 - Titula el documento como "Señalética Braille - Para Imprimir" para diferenciarlo del PDF normal.
 
 Esto permite perforar el papel desde el reverso de la hoja: al voltearla, los puntos quedan en relieve en la posición correcta para su lectura táctil.
+
+![Impresión en Espejo](screenshot/Impresión%20en%20Espejo.jpg)
 
 ---
 
